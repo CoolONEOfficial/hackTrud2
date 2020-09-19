@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "956470695223",
+    "firebase_url": "https://hacktrud2.firebaseio.com",
+    "project_id": "hacktrud2",
+    "storage_bucket": "hacktrud2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956470695223:android:f8126fe3b152b6e355f6b2",
+        "android_client_info": {
+          "package_name": "ru.team13.hacktrud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "956470695223-4lg42ftruss2e78cb7dm3a8ugdc5mk26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQdCJS64MvS2RsXSwfRZ_wqP_9eJN5qKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "956470695223-4lg42ftruss2e78cb7dm3a8ugdc5mk26.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "956470695223-9hm39mps7l9je011ictfnsov95ui18bq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ru.team13.hacktrud"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
