@@ -9,13 +9,18 @@ class SelectTypeMessage implements MessageContent {
   @override
   final Function(dynamic) didOutput;
 
-  SelectTypeMessage(this.didOutput);
+  final ResumeType recomendedType;
+
+  SelectTypeMessage(
+    this.didOutput, {
+    this.recomendedType,
+  });
 
   @override
   List<Widget> buildMessageContent() => [
         TextMessage(
           TextMessageType.ChooseType,
-          arg: ResumeType.Waiter,
+          arg: recomendedType,
         ),
         RadioMessage(
           ResumeType.values.map((e) => e.name).toList(),

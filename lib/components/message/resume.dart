@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:hacktrud/provider/NetworkProvider.dart';
 import 'package:hacktrud/types/message.dart';
 
 import '../text_message.dart';
@@ -40,11 +41,14 @@ class ResumeMessage implements Replyable, MessageContent {
         return null;
     }
 
-    // TODO: send resume (text)
+    var recomendedType = await NetworkProvider.shared.uploadResume(text);
 
-    return SelectTypeMessage((output) {
-      didOutput(output);
-    });
+    return SelectTypeMessage(
+      (output) {
+        didOutput(output);
+      },
+      recomendedType: recomendedType,
+    );
   }
 
   @override
