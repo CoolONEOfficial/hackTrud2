@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'pages/pick_doc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:hacktrud/pages/chat.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,14 +11,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Хакатон труда 2',
-      theme: ThemeData(
-        primarySwatch: createMaterialColor(Color.fromRGBO(78, 116, 212, 1.0)),
-        accentColor: Color.fromRGBO(225, 80, 134, 1.0),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    const fontScale = 1.2;
+    var themeData = ThemeData(
+      fontFamily: "ProximaNova",
+      brightness: Brightness.dark,
+      accentTextTheme: Theme.of(context).accentTextTheme.apply(
+            fontFamily: "ProximaNovaBold",
+            fontSizeFactor: fontScale,
+          ),
+      textTheme: Theme.of(context).accentTextTheme.apply(
+            fontFamily: "ProximaNova",
+            fontSizeFactor: fontScale,
+          ),
+      canvasColor: Colors.black,
+    );
+
+    return Theme(
+      data: themeData,
+      child: PlatformApp(
+        title: 'Хакатон труда 2',
+        initialRoute: ChatPage.path,
+        routes: {
+          ChatPage.path: (context) => ChatPage(),
+        },
       ),
-      home: PickDocPage(),
     );
   }
 

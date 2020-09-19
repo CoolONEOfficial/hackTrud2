@@ -73,11 +73,11 @@
 		</data>
 		<key>Modules/DKPhotoGallery.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		3uMY/05qqwyegMr9jfD3le52/Ks=
+		DExlIZnzaRQOhZ9pWYBBNaKXJnA=
 		</data>
 		<key>Modules/DKPhotoGallery.swiftmodule/Project/x86_64.swiftsourceinfo</key>
 		<data>
-		3uMY/05qqwyegMr9jfD3le52/Ks=
+		DExlIZnzaRQOhZ9pWYBBNaKXJnA=
 		</data>
 		<key>Modules/DKPhotoGallery.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -85,7 +85,7 @@
 		</data>
 		<key>Modules/DKPhotoGallery.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		VMNMJOrt47ys0LRFdIWpKUvH39o=
+		Y0/KzRGfDh+tRMqnvv+dKfmLUWg=
 		</data>
 		<key>Modules/DKPhotoGallery.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -93,7 +93,7 @@
 		</data>
 		<key>Modules/DKPhotoGallery.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		VMNMJOrt47ys0LRFdIWpKUvH39o=
+		Y0/KzRGfDh+tRMqnvv+dKfmLUWg=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -244,22 +244,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			3uMY/05qqwyegMr9jfD3le52/Ks=
+			DExlIZnzaRQOhZ9pWYBBNaKXJnA=
 			</data>
 			<key>hash2</key>
 			<data>
-			+6SU/GcxM3G9j6lzkDzw5DCpi7bD5nxSMV1CRvmUhMg=
+			Y23ETfPwvxPgtAoKMHGPZxaYmUdpBwZ+P5sXanbPH2c=
 			</data>
 		</dict>
 		<key>Modules/DKPhotoGallery.swiftmodule/Project/x86_64.swiftsourceinfo</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			3uMY/05qqwyegMr9jfD3le52/Ks=
+			DExlIZnzaRQOhZ9pWYBBNaKXJnA=
 			</data>
 			<key>hash2</key>
 			<data>
-			+6SU/GcxM3G9j6lzkDzw5DCpi7bD5nxSMV1CRvmUhMg=
+			Y23ETfPwvxPgtAoKMHGPZxaYmUdpBwZ+P5sXanbPH2c=
 			</data>
 		</dict>
 		<key>Modules/DKPhotoGallery.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -277,11 +277,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			VMNMJOrt47ys0LRFdIWpKUvH39o=
+			Y0/KzRGfDh+tRMqnvv+dKfmLUWg=
 			</data>
 			<key>hash2</key>
 			<data>
-			nkLAt4uxZ3a2d6cYwECeXxkQk4WficExkTyvpxpjwpo=
+			+PMhn2zD3/pbal/GSjQdeL2LHicu7GFpgk/gR7IXo2I=
 			</data>
 		</dict>
 		<key>Modules/DKPhotoGallery.swiftmodule/x86_64.swiftdoc</key>
@@ -299,11 +299,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			VMNMJOrt47ys0LRFdIWpKUvH39o=
+			Y0/KzRGfDh+tRMqnvv+dKfmLUWg=
 			</data>
 			<key>hash2</key>
 			<data>
-			nkLAt4uxZ3a2d6cYwECeXxkQk4WficExkTyvpxpjwpo=
+			+PMhn2zD3/pbal/GSjQdeL2LHicu7GFpgk/gR7IXo2I=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
