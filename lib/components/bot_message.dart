@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 import 'message.dart';
 
@@ -30,7 +31,7 @@ class BotMessage extends StatelessWidget {
               ),
               Spacer(),
               Text(
-                TimeOfDay.fromDateTime(dateCreate).format(context),
+                DateFormat('kk:mm').format(dateCreate),
                 style: Theme.of(context).textTheme.caption.apply(
                       color: subtitleColor,
                     ),

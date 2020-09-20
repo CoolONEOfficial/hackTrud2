@@ -100,8 +100,9 @@ class _ChatPageState extends State<ChatPage> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  bottom: 8.0,
-                  top: 8.0,
+                  bottom: MediaQuery.of(context).viewInsets.bottom / 6 +
+                      (MediaQuery.of(context).size.width < 500 ? 8.0 : 16.0),
+                  top: MediaQuery.of(context).size.width < 500 ? 8.0 : 16.0,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,6 +124,8 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget buildReplyField(Replyable replyable) {
     var enabled = replyable?.replyable ?? false;
+    var hint = replyable?.hintText ?? "";
+    var fillColor = enabled ? Colors.white : Color.fromRGBO(98, 98, 98, 1);
     return PlatformTextField(
       enabled: enabled,
       maxLines: 4,
@@ -149,8 +152,8 @@ class _ChatPageState extends State<ChatPage> {
             disabledBorder: border,
             enabledBorder: border,
             filled: true,
-            fillColor: enabled ? Colors.white : Color.fromRGBO(98, 98, 98, 1),
-            hintText: replyable?.hintText ?? "",
+            fillColor: fillColor,
+            hintText: hint,
             hintStyle: TextStyle(
               color: Color.fromRGBO(153, 153, 153, 1.0),
             ),
@@ -161,15 +164,15 @@ class _ChatPageState extends State<ChatPage> {
         );
       },
       cupertino: (context, platform) => CupertinoTextFieldData(
-        placeholder: replyable.hintText,
+        placeholder: hint,
         placeholderStyle: TextStyle(
           decorationColor: Color.fromRGBO(153, 153, 153, 1.0),
           fontWeight: FontWeight.w400,
           fontFamily: "ProximaNova",
-          fontSize: 14,
+          fontSize: 17,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: fillColor,
           borderRadius: BorderRadius.only(
             bottomLeft: rad,
             topLeft: rad,

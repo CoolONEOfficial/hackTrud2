@@ -254,6 +254,12 @@
       "languageVersion": "2.3"
     },
     {
+      "name": "intl",
+      "rootUri": "file:///Users/nikolai_trukhin/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.16.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.5"
+    },
+    {
       "name": "io",
       "rootUri": "file:///Users/nikolai_trukhin/flutter/.pub-cache/hosted/pub.dartlang.org/io-0.3.4",
       "packageUri": "lib/",
@@ -512,7 +518,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-09-20T06:40:46.894203Z",
+  "generated": "2020-09-20T08:05:52.755331Z",
   "generator": "pub",
   "generatorVersion": "2.10.0-110.3.beta"
 }

@@ -39,6 +39,11 @@ class MyApp extends StatelessWidget {
     return Theme(
       data: themeData,
       child: PlatformApp(
+        cupertino: (context, platform) => CupertinoAppData(
+          theme: CupertinoThemeData(
+            primaryColor: Colors.white,
+          ),
+        ),
         title: 'Хакатон труда 2',
         builder: (context, widget) => ResponsiveWrapper.builder(
           ChatPage(),
