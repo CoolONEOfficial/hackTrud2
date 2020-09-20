@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -24,6 +25,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List<Tuple2<dynamic, MessageFrom>> items = [];
   var textController = TextEditingController();
+  var textInvalid = false;
+  var sendingInProgress = false;
   var scrollController = ScrollController();
 
   @override
@@ -44,29 +47,27 @@ class _ChatPageState extends State<ChatPage> {
       axis: Axis.vertical,
       sizeFactor: animation,
       child: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(20.0).subtract(EdgeInsets.only(bottom: 20.0)),
         child: Row(
           mainAxisAlignment: from == MessageFrom.Me
               ? MainAxisAlignment.end
               : MainAxisAlignment.start,
           children: [
-            Container(
-              width: min(340, MediaQuery.of(context).size.width / 5 * 4),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: rad,
-                  topRight: rad,
-                  bottomRight: from == MessageFrom.Bot ? rad : Radius.zero,
-                  bottomLeft: from == MessageFrom.Me ? rad : Radius.zero,
-                ),
-                child: content is MessageContent
-                    ? Wrap(
-                        spacing: 6,
-                        runSpacing: 6,
-                        children: content.buildMessageContent(),
-                      )
-                    : content as Widget,
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: rad,
+                topRight: rad,
+                bottomRight: from == MessageFrom.Bot ? rad : Radius.zero,
+                bottomLeft: from == MessageFrom.Me ? rad : Radius.zero,
               ),
+              child: content is MessageContent
+                  ? Wrap(
+                      direction: Axis.vertical,
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: content.buildMessageContent(),
+                    )
+                  : content as Widget,
             ),
           ],
         ),
@@ -88,88 +89,157 @@ class _ChatPageState extends State<ChatPage> {
               currentFocus.unfocus();
             }
           },
-          child: attachEnabled
-              ? Column(
-                  mainAxisSize: MainAxisSize.max,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: buildAnimatedList(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: 8.0,
+                  top: 8.0,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    buildAttachButton(context, attachEnabled),
                     Expanded(
-                      child: buildAnimatedList(),
+                      child: buildReplyField(replyable),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        bottom: 8.0,
-                        left: attachEnabled ? 0.0 : 12.0,
-                      ),
-                      child: Row(
-                        children: [
-                          PlatformIconButton(
-                            icon: Icon(Icons.attach_file),
-                            onPressed: () async {
-                              FilePickerResult result =
-                                  await FilePicker.platform.pickFiles(
-                                type: FileType.custom,
-                                allowedExtensions: ['txt'],
-                              );
-                              if (result != null) {
-                                var path = result.files.single.path;
-                                var file = File(path);
-                                _sendInput(context, file);
-                              }
-                            },
-                          ),
-                          Expanded(
-                            child: PlatformTextField(
-                              maxLines: 4,
-                              minLines: 2,
-                              controller: textController,
-                              material: (context, platform) =>
-                                  MaterialTextFieldData(
-                                decoration: InputDecoration(
-                                  hintText: replyable.hintText,
-                                ),
-                              ),
-                              cupertino: (context, platform) =>
-                                  CupertinoTextFieldData(
-                                placeholder: replyable.hintText,
-                                placeholderStyle: TextStyle(
-                                  decorationColor:
-                                      Color.fromRGBO(153, 153, 153, 1.0),
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: "ProximaNova",
-                                  fontSize: 14,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: rad,
-                                    topLeft: rad,
-                                    topRight: rad,
-                                  ),
-                                ),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          PlatformIconButton(
-                            icon: Icon(Icons.send),
-                            onPressed: () {
-                              var text = textController.text;
-                              if (replyable.textValidate(text)) {
-                                textController.clear();
-                                _sendInput(context, text);
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                    buildSendButton(replyable, context),
                   ],
-                )
-              : buildAnimatedList(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget buildReplyField(Replyable replyable) => PlatformTextField(
+        enabled: replyable != null,
+        maxLines: 4,
+        minLines: kIsWeb ? 4 : 2,
+        controller: textController,
+        material: (context, platform) {
+          var border = OutlineInputBorder(
+            borderSide: BorderSide(
+              color: replyable != null
+                  ? Color.fromRGBO(238, 238, 238, 1)
+                  : Color.fromRGBO(98, 98, 98, 1),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: rad,
+              topLeft: rad,
+              topRight: rad,
+            ),
+          );
+          return MaterialTextFieldData(
+            enabled: replyable != null,
+            decoration: InputDecoration(
+              errorText: textInvalid ? "Слишком мало текста" : null,
+              border: border,
+              disabledBorder: border,
+              enabledBorder: border,
+              filled: true,
+              fillColor: replyable != null
+                  ? Colors.white
+                  : Color.fromRGBO(98, 98, 98, 1),
+              hintText: replyable?.hintText ?? "",
+              hintStyle: TextStyle(
+                color: Color.fromRGBO(153, 153, 153, 1.0),
+              ),
+            ),
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          );
+        },
+        cupertino: (context, platform) => CupertinoTextFieldData(
+          enabled: replyable != null,
+          placeholder: replyable.hintText,
+          placeholderStyle: TextStyle(
+            decorationColor: Color.fromRGBO(153, 153, 153, 1.0),
+            fontWeight: FontWeight.w400,
+            fontFamily: "ProximaNova",
+            fontSize: 14,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              bottomLeft: rad,
+              topLeft: rad,
+              topRight: rad,
+            ),
+          ),
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      );
+
+  Widget buildAttachButton(BuildContext context, bool attachEnabled) =>
+      PlatformIconButton(
+        icon: Icon(Icons.attach_file),
+        onPressed: attachEnabled
+            ? () async {
+                FilePickerResult result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['txt'],
+                );
+                if (result != null) {
+                  var path = result.files.single.path;
+                  var file = File(path);
+                  _sendInput(context, file);
+                }
+              }
+            : null,
+      );
+
+  Widget buildSendButton(Replyable replyable, BuildContext context) {
+    var iconSize = Theme.of(context).iconTheme.size;
+    return AnimatedCrossFade(
+      duration: const Duration(milliseconds: 500),
+      firstChild: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: iconSize,
+          height: iconSize,
+          child: PlatformCircularProgressIndicator(
+            cupertino: (_, __) => CupertinoProgressIndicatorData(
+              radius: iconSize / 2,
+            ),
+            material: (context, platform) => MaterialProgressIndicatorData(
+              strokeWidth: 1,
+            ),
+          ),
+        ),
+      ),
+      secondChild: PlatformIconButton(
+        icon: Icon(
+          Icons.send,
+          size: Theme.of(context).iconTheme.size,
+        ),
+        onPressed: replyable != null
+            ? () {
+                var text = textController.text;
+                if (replyable.textValidate(text)) {
+                  textController.clear();
+                  _sendInput(context, text);
+                } else {
+                  setState(() {
+                    textInvalid = true;
+                  });
+                }
+              }
+            : null,
+      ),
+      crossFadeState: sendingInProgress
+          ? CrossFadeState.showFirst
+          : CrossFadeState.showSecond,
     );
   }
 
@@ -203,7 +273,13 @@ class _ChatPageState extends State<ChatPage> {
     if (reply != null) {
       _addMessage(reply, MessageFrom.Me);
     }
+    setState(() {
+      sendingInProgress = true;
+    });
     _addMessage(await lastMessage?.didInput(context, input), MessageFrom.Bot);
+    setState(() {
+      sendingInProgress = false;
+    });
   }
 
   static const rad = Radius.circular(10.0);

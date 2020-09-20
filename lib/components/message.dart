@@ -17,11 +17,19 @@ class Message extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: color,
-      padding: padding,
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 100,
+          maxWidth: MediaQuery.of(context).size.width / 5 * 4,
+        ),
+        child: Container(
+          constraints: BoxConstraints(
+            minWidth: 100,
+            maxWidth: MediaQuery.of(context).size.width / 5 * 4,
+          ),
+          color: color,
+          padding: padding,
+          child: child,
+        ),
+      );
 }

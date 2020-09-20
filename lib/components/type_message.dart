@@ -11,15 +11,11 @@ class TypeMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MyMessage(
-        child: Row(
-          children: [
-            Text(
-              type.name,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-          ],
+        child: Text(
+          type.name,
+          style: TextStyle(
+            color: Colors.black,
+          ),
         ),
       );
 }

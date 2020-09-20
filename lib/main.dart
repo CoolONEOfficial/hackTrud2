@@ -17,6 +17,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const fontScale = 1.2;
     var themeData = ThemeData(
+      iconTheme: IconThemeData(
+        size: 24,
+        color: Colors.white,
+      ),
       fontFamily: "ProximaNova",
       brightness: Brightness.dark,
       accentTextTheme: Theme.of(context).accentTextTheme.apply(
@@ -29,6 +33,7 @@ class MyApp extends StatelessWidget {
           ),
       backgroundColor: kIsWeb ? Colors.transparent : null,
       canvasColor: kIsWeb ? Colors.transparent : null,
+      accentColor: Colors.grey,
     );
 
     return Theme(
@@ -68,8 +73,8 @@ class WebBackgroundPainter extends CustomPainter {
     Path path = Path();
     // Draws a line from left top corner to right bottom
     path.lineTo(size.width, 0);
-    path.lineTo(size.width, size.height / 10 * 8);
-    path.lineTo(0, size.height / 10 * 9);
+    path.lineTo(size.width, size.height / 12 * 10);
+    path.lineTo(0, size.height / 12 * 11);
     path.close();
 
     canvas.drawPath(path, paint);

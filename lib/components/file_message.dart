@@ -15,6 +15,7 @@ class FileMessage extends StatelessWidget {
 
     return MyMessage(
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.attach_file,

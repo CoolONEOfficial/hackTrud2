@@ -61,7 +61,6 @@ extension TextMessageExtension on TextMessageType {
           textSpans.addAll([
             TextSpan(
               text: ", возможно это ",
-              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             TextSpan(
               text: "\'" + recomended.name + "\'",
@@ -69,7 +68,6 @@ extension TextMessageExtension on TextMessageType {
             ),
             TextSpan(
               text: ".",
-              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ]);
         } else {
