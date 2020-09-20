@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:hacktrud/components/bool_message.dart';
 import 'package:hacktrud/components/file_message.dart';
 import 'package:hacktrud/components/message/resume.dart';
 import 'package:hacktrud/components/reply_message.dart';
@@ -31,8 +32,10 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    _addMessage(ResumeMessage((output) => _sendInput(context, output)),
-        MessageFrom.Bot);
+    _addMessage(
+      ResumeMessage((output) => _sendInput(context, output)),
+      MessageFrom.Bot,
+    );
 
     super.initState();
   }
@@ -118,68 +121,67 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget buildReplyField(Replyable replyable) => PlatformTextField(
-        enabled: replyable != null,
-        maxLines: 4,
-        minLines: kIsWeb ? 4 : 2,
-        controller: textController,
-        material: (context, platform) {
-          var border = OutlineInputBorder(
-            borderSide: BorderSide(
-              color: replyable != null
-                  ? Color.fromRGBO(238, 238, 238, 1)
-                  : Color.fromRGBO(98, 98, 98, 1),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: rad,
-              topLeft: rad,
-              topRight: rad,
-            ),
-          );
-          return MaterialTextFieldData(
-            enabled: replyable != null,
-            decoration: InputDecoration(
-              errorText: textInvalid ? "Слишком мало текста" : null,
-              border: border,
-              disabledBorder: border,
-              enabledBorder: border,
-              filled: true,
-              fillColor: replyable != null
-                  ? Colors.white
-                  : Color.fromRGBO(98, 98, 98, 1),
-              hintText: replyable?.hintText ?? "",
-              hintStyle: TextStyle(
-                color: Color.fromRGBO(153, 153, 153, 1.0),
-              ),
-            ),
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          );
-        },
-        cupertino: (context, platform) => CupertinoTextFieldData(
-          enabled: replyable != null,
-          placeholder: replyable.hintText,
-          placeholderStyle: TextStyle(
-            decorationColor: Color.fromRGBO(153, 153, 153, 1.0),
-            fontWeight: FontWeight.w400,
-            fontFamily: "ProximaNova",
-            fontSize: 14,
+  Widget buildReplyField(Replyable replyable) {
+    var enabled = replyable?.replyable ?? false;
+    return PlatformTextField(
+      enabled: enabled,
+      maxLines: 4,
+      minLines: kIsWeb ? 4 : 2,
+      controller: textController,
+      material: (context, platform) {
+        var border = OutlineInputBorder(
+          borderSide: BorderSide(
+            color: enabled
+                ? Color.fromRGBO(238, 238, 238, 1)
+                : Color.fromRGBO(98, 98, 98, 1),
+            width: 1,
           ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              bottomLeft: rad,
-              topLeft: rad,
-              topRight: rad,
+          borderRadius: BorderRadius.only(
+            bottomLeft: rad,
+            topLeft: rad,
+            topRight: rad,
+          ),
+        );
+        return MaterialTextFieldData(
+          decoration: InputDecoration(
+            errorText: textInvalid ? "Слишком мало текста" : null,
+            border: border,
+            disabledBorder: border,
+            enabledBorder: border,
+            filled: true,
+            fillColor: enabled ? Colors.white : Color.fromRGBO(98, 98, 98, 1),
+            hintText: replyable?.hintText ?? "",
+            hintStyle: TextStyle(
+              color: Color.fromRGBO(153, 153, 153, 1.0),
             ),
           ),
           style: TextStyle(
             color: Colors.black,
           ),
+        );
+      },
+      cupertino: (context, platform) => CupertinoTextFieldData(
+        placeholder: replyable.hintText,
+        placeholderStyle: TextStyle(
+          decorationColor: Color.fromRGBO(153, 153, 153, 1.0),
+          fontWeight: FontWeight.w400,
+          fontFamily: "ProximaNova",
+          fontSize: 14,
         ),
-      );
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            bottomLeft: rad,
+            topLeft: rad,
+            topRight: rad,
+          ),
+        ),
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
 
   Widget buildAttachButton(BuildContext context, bool attachEnabled) =>
       PlatformIconButton(
@@ -256,27 +258,33 @@ class _ChatPageState extends State<ChatPage> {
 
   _sendInput(BuildContext context, input) async {
     Widget reply;
-    switch (input.runtimeType) {
-      case ResumeType:
-        var resumeType = input as ResumeType;
-        reply = TypeMessage(resumeType);
-        break;
-      case String:
-        reply = ReplyMessage(input as String);
-        break;
-      case File:
-        var file = input as File;
-        var path = file.path;
-        reply = FileMessage(path.substring(path.lastIndexOf('/') + 1));
-        break;
-    }
+    if (input is Tuple2<ResumeType, String>) {
+      var resumeType = input;
+      reply = TypeMessage(resumeType.item1);
+    } else
+      switch (input.runtimeType) {
+        case bool:
+          reply = BoolMessage(input as bool);
+          break;
+        case String:
+          reply = ReplyMessage(input as String);
+          break;
+        case File:
+          var file = input as File;
+          var path = file.path;
+          reply = FileMessage(path.substring(path.lastIndexOf('/') + 1));
+          break;
+      }
     if (reply != null) {
       _addMessage(reply, MessageFrom.Me);
     }
     setState(() {
       sendingInProgress = true;
     });
-    _addMessage(await lastMessage?.didInput(context, input), MessageFrom.Bot);
+    _addMessage(
+      await lastMessage?.didInput(context, input),
+      MessageFrom.Bot,
+    );
     setState(() {
       sendingInProgress = false;
     });
@@ -292,11 +300,11 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     Timer(
-      Duration(milliseconds: 200),
+      Duration(milliseconds: 320),
       () {
         scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 200),
+          scrollController.position.minScrollExtent,
+          duration: const Duration(milliseconds: 300),
           curve: Curves.ease,
         );
       },

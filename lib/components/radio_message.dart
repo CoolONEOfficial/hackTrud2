@@ -8,9 +8,11 @@ import 'package:hacktrud/components/message.dart';
 class RadioMessage extends StatelessWidget {
   final Function(dynamic) didOutput;
   final List<String> answers;
+  final List<dynamic> values;
 
   const RadioMessage(
     this.answers, {
+    this.values,
     Key key,
     @required this.didOutput,
   }) : super(key: key);
@@ -24,30 +26,36 @@ class RadioMessage extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: answers
+                .asMap()
+                .entries
                 .map(
-                  (answer) => [
-                    Expanded(
-                      child: Platform.isIOS
-                          ? CupertinoButton(
-                              child: buildButtonContent(answer, context),
-                              onPressed: () => didTapButton(answer),
-                              minSize: 0,
-                              padding: EdgeInsets.zero,
-                            )
-                          : Material(
-                              color: Colors.transparent,
-                              child: InkWell(
+                  (i) {
+                    var index = i.key;
+                    var answer = i.value;
+                    return [
+                      Expanded(
+                        child: Platform.isIOS
+                            ? CupertinoButton(
                                 child: buildButtonContent(answer, context),
-                                onTap: () => didTapButton(answer),
+                                onPressed: () => didTapButton(index),
+                                minSize: 0,
+                                padding: EdgeInsets.zero,
+                              )
+                            : Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  child: buildButtonContent(answer, context),
+                                  onTap: () => didTapButton(index),
+                                ),
                               ),
-                            ),
-                    ),
-                    Container(
-                      color: Color.fromRGBO(221, 221, 221, 1),
-                      width: 0.5,
-                      height: 23,
-                    )
-                  ],
+                      ),
+                      Container(
+                        color: Color.fromRGBO(221, 221, 221, 1),
+                        width: 0.5,
+                        height: 23,
+                      )
+                    ];
+                  },
                 )
                 .expand((e) => e)
                 .toList()
@@ -56,8 +64,8 @@ class RadioMessage extends StatelessWidget {
         ),
       );
 
-  void didTapButton(String answer) {
-    didOutput(answer);
+  void didTapButton(int index) {
+    didOutput(values != null ? values[index] : answers[index]);
   }
 
   Center buildButtonContent(String answer, BuildContext context) {

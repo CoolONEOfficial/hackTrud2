@@ -5,12 +5,15 @@ part 'job_model.g.dart';
 class JobModel {
   int id;
   String name;
+  String udpipeName;
 
-  JobModel(this.id, this.name);
+  JobModel(
+    this.id,
+    this.name,
+    this.udpipeName,
+  );
 
   factory JobModel.fromJson(Map<String, dynamic> json) =>
       _$JobModelFromJson(json);
   Map<String, dynamic> toJson() => _$JobModelToJson(this);
 }
-
-extension JobModelExtension on JobModel {}

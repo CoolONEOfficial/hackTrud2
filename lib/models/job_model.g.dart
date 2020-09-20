@@ -10,10 +10,12 @@ JobModel _$JobModelFromJson(Map<String, dynamic> json) {
   return JobModel(
     json['id'] as int,
     json['name'] as String,
+    json['udpipeName'] as String,
   );
 }
 
 Map<String, dynamic> _$JobModelToJson(JobModel instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'udpipeName': instance.udpipeName,
     };

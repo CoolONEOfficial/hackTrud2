@@ -22,9 +22,10 @@ class ResumeMessage implements Replyable, MessageContent {
       ];
 
   @override
-  bool textValidate(String text) {
-    return text.length > 20;
-  }
+  bool textValidate(String text) => text.length > 10;
+
+  @override
+  bool get replyable => true;
 
   @override
   Future<MessageContent> didInput(BuildContext context, input) async {

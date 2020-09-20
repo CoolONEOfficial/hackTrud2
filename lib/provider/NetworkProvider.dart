@@ -2,33 +2,88 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:hacktrud/models/answer_model.dart';
 import 'package:hacktrud/models/job_model.dart';
+import 'package:hacktrud/models/question_model.dart';
 import 'package:hacktrud/types/resume.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:tuple/tuple.dart';
 
 class NetworkProvider {
   static NetworkProvider shared = NetworkProvider();
 
   static const _baseUrl = "130.193.36.228:8000";
 
-  Future<ResumeType> uploadResume(String resume) async {
-    var queryParameters = {
-      'input': resume,
+  Dio dio;
+
+  NetworkProvider() {
+    dio = Dio();
+    dio.options.baseUrl = "http://130.193.36.228:8000/";
+    dio.options.headers = {
+      HttpHeaders.acceptHeader: '*/*',
+      HttpHeaders.contentTypeHeader: ContentType.json.value,
     };
-    var uri = Uri.http(_baseUrl, '/upload', queryParameters);
-    var resp = await http.get(
-      uri,
-      headers: {
-        HttpHeaders.acceptHeader: '*/*',
-      },
+  }
+
+  Future<Tuple2<ResumeType, String>> uploadResume(String resume) async {
+    Map<String, String> query = {'input': resume};
+    var resp = await dio.get(
+      "upload",
+      queryParameters: query,
     );
 
     if (resp.statusCode == HttpStatus.ok) {
-      var json = jsonDecode(resp.body);
+      var json = resp.data;
       var jobModel = JobModel.fromJson(json);
-      return ResumeType.values.firstWhere(
-        (r) => r.engName == jobModel.name,
+      return Tuple2(
+        ResumeType.values.firstWhere(
+          (r) => r.engName == jobModel.name,
+        ),
+        jobModel.udpipeName,
       );
+    } else {
+      debugPrint("resp code ${resp.statusCode}");
+      return null;
+    }
+  }
+
+  Future<List<QuestionModel>> getQuestions(
+    String modelName,
+    String udpipeName,
+  ) async {
+    Map<String, String> body = {
+      'modelName': modelName,
+      'udpipeName': udpipeName,
+    };
+    var resp = await dio.post(
+      "model",
+      data: body,
+    );
+
+    if (resp.statusCode == HttpStatus.ok) {
+      var json = resp.data;
+      var jobModel =
+          json.map<QuestionModel>((e) => QuestionModel.fromJson(e)).toList();
+      return jobModel;
+    } else {
+      debugPrint("resp code ${resp.statusCode}");
+      return null;
+    }
+  }
+
+  Future saveQuestions(List<AnswerModel> answerList) async {
+    Map<String, dynamic> body = {
+      'answers': answerList.map((e) => e.toJson()).toList(),
+    };
+    var resp = await dio.put(
+      "model",
+      data: body,
+    );
+
+    if (resp.statusCode == HttpStatus.ok) {
+      var json = resp.data;
+      var jobModel = json.map((e) => QuestionModel.fromJson(e)).toList();
+      return jobModel;
     } else {
       debugPrint("resp code ${resp.statusCode}");
       return null;

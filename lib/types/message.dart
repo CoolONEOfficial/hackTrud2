@@ -14,6 +14,7 @@ abstract class Replyable {
   bool get attachable;
   bool textValidate(String text);
   String get hintText;
+  bool get replyable;
 }
 
 enum MessageFrom { Me, Bot }

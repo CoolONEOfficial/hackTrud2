@@ -1,4 +1,8 @@
-enum ResumeType { Storekeeper, DriverLoader, Waiter }
+enum ResumeType {
+  Storekeeper,
+  DriverLoader,
+  Waiter,
+}
 
 extension ResumeExtension on ResumeType {
   String get name {
